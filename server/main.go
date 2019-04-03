@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/json"
@@ -10,6 +10,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func getBooks() {
+
+}
+
 func main() {
 	//init router
 
@@ -20,4 +24,6 @@ func main() {
 	router.HandleFunc("/api/books",createBook).Methods("POST")
 	router.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
 	router.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
+
+	log.Fatal(http.ListenAndServe("8000", router))
 }
