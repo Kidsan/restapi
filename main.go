@@ -12,7 +12,6 @@ import (
 )
 
 //books
-
 var books []book.Book
 
 func getBooks(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +20,16 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 func getBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type","application/json")
+	params := mux.Vars(r)
 
+	for _, item := range books {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&book.Book{})
 }
 
 func createBook(w http.ResponseWriter, r *http.Request) {
