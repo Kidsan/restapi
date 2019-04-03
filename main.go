@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-//	"math/rand"
-//	"strconv"
+	"math/rand"
+	"strconv"
 	book"restapi/book"
 
 	"github.com/gorilla/mux"
@@ -33,7 +33,13 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func createBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type","application/json")
+	var book book.Book
+	_ = json.NewDecoder(r.Body).Decode(&book)
+	book.ID = strconv.Itoa(rand.Intn(10000000)) //not safe obviously
+	books = append(books, book)
 
+	json.NewEncoder(w).Encode(book)
 }
 
 func updateBook(w http.ResponseWriter, r *http.Request) {
