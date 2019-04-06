@@ -3,8 +3,10 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"math/rand"
 	"net/http"
 	"restapi/book"
+	"strconv"
 )
 
 //books
@@ -25,16 +27,19 @@ func getBook(c echo.Context) error {
 
 	return c.JSON(http.StatusNotFound,"Not Found")
 }
-//
-//func createBook(c echo.Context) error) {
-//	w.Header().Set("Content-type", "application/json")
-//	var book book.Book
-//	_ = json.NewDecoder(r.Body).Decode(&book)
-//	book.ID = strconv.Itoa(rand.Intn(10000000)) //not safe obviously
-//	books = append(books, book)
-//
-//	json.NewEncoder(w).Encode(book)
-//}
+
+func createBook(c echo.Context) error {
+	var book book.Book
+
+	if err := c.Bind(book); err != nil {
+		return err
+	}
+
+	book.ID = strconv.Itoa(rand.Intn(10000000)) //not safe obviously
+	books = append(books, book)
+
+	return c.JSON(http.StatusOK, book)
+}
 
 //func updateBook(w http.ResponseWriter, r *http.Request) {
 //
@@ -57,7 +62,7 @@ func main() {
 
 	e.GET("/api/books", getBooks)
 	e.GET("/api/books/:id", getBook)
-	//e.POST("/api/books", createBook)
+	e.POST("/api/books", createBook)
 	//router.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
 	//router.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
 
